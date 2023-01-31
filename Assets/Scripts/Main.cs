@@ -22,7 +22,7 @@ public class Main : NetworkBehaviour
       utp.ConnectionData.Port = port;
       NetworkManager.Singleton.StartClient();
       netSettings.hide();
-      Debug.Log("start client");
+      Debug.Log("started client");
 
 
     }
@@ -32,9 +32,14 @@ public class Main : NetworkBehaviour
         var utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
         utp.ConnectionData.Address = ip.ToString();
         utp.ConnectionData.Port = port;
+
+        NetworkManager.Singleton.OnClientConnectedCallback += HostOnClientConnected; 
+        NetworkManager.Singleton.OnClientDisconnectCallback += HostOnClientDisconnected;  
+        
+        
         NetworkManager.Singleton.StartHost();
         netSettings.hide();
-        Debug.Log("start host");
+        Debug.Log("started host");
     }
 
     private void startServer(IPAddress ip, ushort port)
@@ -42,12 +47,28 @@ public class Main : NetworkBehaviour
         var utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
         utp.ConnectionData.Address = ip.ToString();
         utp.ConnectionData.Port = port;
+        
+        NetworkManager.Singleton.OnClientConnectedCallback += HostOnClientConnected; 
+        NetworkManager.Singleton.OnClientDisconnectCallback += HostOnClientDisconnected; 
+        
         NetworkManager.Singleton.StartServer(); 
         netSettings.hide();
-        Debug.Log("start server");
+        Debug.Log("started server");
     }
+    private void printIs(string msg)
+    {
+        Debug.Log($"server:{IsServer} host:{IsHost} client:{IsClient} owner:{IsOwner}");
+    } 
     // ----------
     //Events 
+    private void HostOnClientConnected(ulong clientId)
+    {
+        Debug.Log($"Client Connected: {clientId}");
+    }
+    private void HostOnClientDisconnected(ulong clientId)
+    {
+        Debug.Log($"Client Disconnected: {clientId}");
+    }
     private void NetSettingsOnClientStart(IPAddress ip, ushort port)
     {
         startClient(ip,port);
@@ -60,6 +81,8 @@ public class Main : NetworkBehaviour
     {
         startServer(ip,port);
     }
+
+    
     
     //Update 
     void Update()
