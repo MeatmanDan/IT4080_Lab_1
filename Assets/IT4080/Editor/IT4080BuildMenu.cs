@@ -17,6 +17,7 @@ public static class IT4080BuildMenu {
         public string execExtension = "";
         public string defaultBuildPath = "";
 
+
         public OsHelper() {
 #if UNITY_EDITOR_WIN
             InitWindows();
