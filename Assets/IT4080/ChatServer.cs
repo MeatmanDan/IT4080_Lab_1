@@ -14,6 +14,7 @@ public class ChatServer : NetworkBehaviour
     public TMPro.TMP_Text txtChatLog;
     private ulong[] singleClientId = new ulong[1];
     private ulong[] dmClientIds = new ulong[2];
+    private ulong holder = new ulong();
     void Start()
     { 
         
@@ -23,6 +24,7 @@ public class ChatServer : NetworkBehaviour
     [ClientRpc]
     public void SendChatMessageClientRpc(string message, ClientRpcParams clientRpcParams = default)
     {
+        Debug.Log("SendChatMessageClientRpc");
         ClientRpcParams rpcParams = default;
         rpcParams.Send.TargetClientIds = singleClientId;
         chatm = new Chat.ChatMessage();
@@ -36,6 +38,7 @@ public class ChatServer : NetworkBehaviour
 
     private void SendDirectMessage(string message, ulong from, ulong to)
     {
+        Debug.Log("DirectMessage");
         ClientRpcParams rpcParams = default;
         rpcParams.Send.TargetClientIds = singleClientId;
 
@@ -48,6 +51,21 @@ public class ChatServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SendChatMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
     {
+        Debug.Log("SendChatMessageServerRpc");
+       ServerRpcParams rpcParams = default;
+        rpcParams.Receive.SenderClientId = holder;
+       // rpcParams.Receive.SenderClientId = dmClientIds;
+        chatm = new Chat.ChatMessage();
+        chatm.from = holder.ToString();
+        chatm.message = message;
+        chat.ShowMessage(chatm);
+ 
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestSendChatMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
+    {
+        Debug.Log("RequestSendChatMessageServerRpc");
         Debug.Log($"Host got message: {message}");
         if (message.StartsWith("@"))
         {
@@ -59,15 +77,8 @@ public class ChatServer : NetworkBehaviour
         }
         else
         {
-            SendChatMessageClientRpc(message); 
+            SendChatMessageServerRpc(message); 
         }
-    }
-    
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestSendChatMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
-    {
-        
-        chat.SystemMessage(message);
     }
 
     public void DisplayMessageLocally(string message)
@@ -78,7 +89,8 @@ public class ChatServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SendSystemMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
     {
-       RequestSendChatMessageServerRpc(message);
+       chat.SystemMessage(message);
+       Debug.Log("SendSystemMessageServerRpc");
     }
     
 
