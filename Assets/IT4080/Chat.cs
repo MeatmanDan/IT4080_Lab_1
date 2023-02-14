@@ -66,7 +66,9 @@ namespace It4080 {
             ChatMessage msg = new ChatMessage();
             msg.message = inputMessage.text;
             inputMessage.text = "";
+            Debug.Log(msg.message);
             sendMessage.Invoke(msg);
+            
         }
 
 
@@ -106,7 +108,6 @@ namespace It4080 {
         {
             DisplayMessage(msg);
         }
-
 
         public void SystemMessage(string text)
         {
