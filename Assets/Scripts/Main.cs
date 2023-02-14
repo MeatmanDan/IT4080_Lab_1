@@ -114,7 +114,7 @@ public class Main : NetworkBehaviour
     {
         Debug.Log($"Client Connected: {clientId}");
        chatserver.SendSystemMessageServerRpc($"Client {clientId} connected.");
-       chatserver.SendSystemMessageServerRpc(MakeWelcomeMessage(clientId));
+       chatserver.SendSystemMessageServerRpc(MakeWelcomeMessage(clientId), clientId);
     }
     private void HostOnClientDisconnected(ulong clientId)
     {

@@ -28,8 +28,6 @@ public class ChatServer : NetworkBehaviour
         ClientRpcParams rpcParams = default;
         rpcParams.Send.TargetClientIds = singleClientId;
         chatm = new Chat.ChatMessage();
-       // chatm.to = singleClientId[0].ToString();
-        //chatm.from = NetworkManager.Singleton.LocalClientId.ToString();
         chatm.message = message;
         chat.ShowMessage(chatm);
         
@@ -59,6 +57,7 @@ public class ChatServer : NetworkBehaviour
         chatm.from = holder.ToString();
         chatm.message = message;
         chat.ShowMessage(chatm);
+        SendChatMessageClientRpc(message);
  
     }
     
@@ -92,9 +91,28 @@ public class ChatServer : NetworkBehaviour
        chat.SystemMessage(message);
        Debug.Log("SendSystemMessageServerRpc");
     }
-    
+
+    [ServerRpc]
+    public void SendSystemMessageServerRpc(string message, ulong to, ServerRpcParams serverRpcParams = default)
+    {
+        ClientRpcParams rpcParams = default;
+        rpcParams.Send.TargetClientIds = singleClientId;
+        singleClientId[0] = to;
+        RecieveMessageClientRpc(message, It4080.Chat.MSG_SYSTEM, rpcParams);
+    }
+
+    [ClientRpc]
+    public void RecieveMessageClientRpc(string message, string from, ClientRpcParams clientRpcParams = default)
+    {
+        chatm = new Chat.ChatMessage();
+        chatm.from = from;
+        chatm.to = singleClientId[0].ToString();
+        chatm.message = message; 
+        chat.ShowMessage(chatm);
 
 
+        SendChatMessageClientRpc(message); 
+    }
     // Update is called once per frame
     void Update() 
     {
