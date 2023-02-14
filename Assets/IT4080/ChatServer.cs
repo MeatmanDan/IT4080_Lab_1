@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using It4080;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 
 public class ChatServer : NetworkBehaviour
@@ -25,8 +26,8 @@ public class ChatServer : NetworkBehaviour
         ClientRpcParams rpcParams = default;
         rpcParams.Send.TargetClientIds = singleClientId;
         chatm = new Chat.ChatMessage();
-        chatm.to = singleClientId[0].ToString();
-        chatm.from = NetworkManager.Singleton.LocalClientId.ToString();
+       // chatm.to = singleClientId[0].ToString();
+        //chatm.from = NetworkManager.Singleton.LocalClientId.ToString();
         chatm.message = message;
         chat.ShowMessage(chatm);
         
@@ -65,7 +66,8 @@ public class ChatServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestSendChatMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
     {
-        SendChatMessageClientRpc(message);
+        
+        chat.SystemMessage(message);
     }
 
     public void DisplayMessageLocally(string message)
@@ -76,7 +78,7 @@ public class ChatServer : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SendSystemMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
     {
-        
+       RequestSendChatMessageServerRpc(message);
     }
     
 

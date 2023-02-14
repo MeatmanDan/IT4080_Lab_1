@@ -18,9 +18,9 @@ public class Main : NetworkBehaviour
         netSettings.setStatusText("Not Connected");
        chat.SystemMessage("hello world");
        chat.sendMessage += ChatOnSendMessage;
-       It4080.Chat.ChatMessage msg = new It4080.Chat.ChatMessage();
-       msg.message = "foobar"; 
-         chat.ShowMessage(msg);
+     //  It4080.Chat.ChatMessage msg = new It4080.Chat.ChatMessage();
+     //  msg.message = "foobar"; 
+      //   chat.ShowMessage(msg);
 
     }
 
@@ -120,7 +120,7 @@ public class Main : NetworkBehaviour
     {
         chatserver.SendSystemMessageServerRpc($"Client {clientId} disconnected");
         Debug.Log($"Client Disconnected: {clientId}");
-       // chatserver.SendChatMessageClientRpc($"Client {clientId} disconnected");
+       chatserver.SendChatMessageClientRpc($"Client {clientId} disconnected");
     }
 
     private void ClientOnClientConnected(ulong clientId)

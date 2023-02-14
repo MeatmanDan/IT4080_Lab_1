@@ -669,7 +669,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2627574800141797938, guid: 7125ed4f9c72340aca2f7407a8a44140, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -72
+      value: -157
       objectReference: {fileID: 0}
     - target: {fileID: 4879425580386642770, guid: 7125ed4f9c72340aca2f7407a8a44140, type: 3}
       propertyPath: m_Name
@@ -757,7 +757,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4879425580386642782, guid: 7125ed4f9c72340aca2f7407a8a44140, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 202
+      value: 204
       objectReference: {fileID: 0}
     - target: {fileID: 4879425580386642782, guid: 7125ed4f9c72340aca2f7407a8a44140, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1180,7 +1180,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 386, y: 278, z: -433.76}
+  m_LocalPosition: {x: 386, y: 265.31, z: -433.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1327,7 +1327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   netSettings: {fileID: 2049288664}
-  chat: {fileID: 0}
+  chat: {fileID: 267177502}
   chatserver: {fileID: 3852217}
 --- !u!114 &1374488303
 MonoBehaviour:
