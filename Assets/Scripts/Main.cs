@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UTP; 
+using Unity.Netcode.Transports.UTP;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 public class Main : NetworkBehaviour 
 {
     public It4080.NetworkSettings netSettings;
     // Start is called before the first frame update
     public It4080.Chat chat;
     public ChatServer chatserver;
+    public Button _btnStart; 
     void Start()
     {
         netSettings.startServer += NetSettingsOnServerStart;
@@ -21,9 +25,15 @@ public class Main : NetworkBehaviour
      //  It4080.Chat.ChatMessage msg = new It4080.Chat.ChatMessage();
      //  msg.message = "foobar"; 
       //   chat.ShowMessage(msg);
+    //  _btnStart = GameObject.Find("StartGameBttn");
+      
 
     }
 
+    private void StartGame()
+    {
+        NetworkManager.SceneManager.LoadScene("Arena1", UnityEngine.SceneManagement.LoadSceneMode.Single);
+    }
     private void ChatOnSendMessage(It4080.Chat.ChatMessage msg)
     {
         chatserver.RequestSendChatMessageServerRpc(msg.message);

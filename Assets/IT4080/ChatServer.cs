@@ -57,7 +57,7 @@ public class ChatServer : NetworkBehaviour
         chatm.from = holder.ToString();
         chatm.message = message;
         chat.ShowMessage(chatm);
-        SendChatMessageClientRpc(message);
+        //SendChatMessageClientRpc(message);
  
     }
     
