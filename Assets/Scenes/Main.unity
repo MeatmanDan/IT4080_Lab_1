@@ -1401,7 +1401,12 @@ MonoBehaviour:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1116042757}
     PlayerPrefab: {fileID: 0}
-    NetworkPrefabs: []
+    NetworkPrefabs:
+    - Override: 0
+      Prefab: {fileID: 7601898297808629752, guid: 3fa5a5d50c1c442a89a81b5edead090e, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -1465,6 +1470,7 @@ MonoBehaviour:
   netSettings: {fileID: 2049288664}
   chat: {fileID: 267177502}
   chatserver: {fileID: 3852217}
+  _btnStart: {fileID: 0}
 --- !u!114 &1374488303
 MonoBehaviour:
   m_ObjectHideFlags: 0
