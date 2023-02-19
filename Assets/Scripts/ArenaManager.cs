@@ -6,6 +6,8 @@ using Unity.Netcode;
 
 public class ArenaManager : NetworkBehaviour
 {
+    public Player playerfella; 
+    
     // Start is called before the first frame update
     void Start()
     {

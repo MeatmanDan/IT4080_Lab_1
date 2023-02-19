@@ -25,11 +25,17 @@ public class Main : NetworkBehaviour
      //  It4080.Chat.ChatMessage msg = new It4080.Chat.ChatMessage();
      //  msg.message = "foobar"; 
       //   chat.ShowMessage(msg);
-    //  _btnStart = GameObject.Find("StartGameBttn");
-      
+      _btnStart = GameObject.Find("StartGameBttn").GetComponent<Button>();
+      _btnStart.onClick.AddListener(BtnStartGameOnClick);
+      //_btnStart.gameObject.SetActive(false);
+
 
     }
 
+    private void BtnStartGameOnClick()
+    {
+        StartGame();
+    }
     private void StartGame()
     {
         NetworkManager.SceneManager.LoadScene("Arena1", UnityEngine.SceneManagement.LoadSceneMode.Single);
