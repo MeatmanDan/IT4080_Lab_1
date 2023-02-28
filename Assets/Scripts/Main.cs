@@ -27,7 +27,9 @@ public class Main : NetworkBehaviour
       //   chat.ShowMessage(msg);
       _btnStart = GameObject.Find("StartGameBttn").GetComponent<Button>();
       _btnStart.onClick.AddListener(BtnStartGameOnClick);
-      //_btnStart.gameObject.SetActive(false);
+    
+      _btnStart.gameObject.SetActive(false); 
+      
 
 
     }
@@ -86,6 +88,7 @@ public class Main : NetworkBehaviour
         
         NetworkManager.Singleton.StartHost();
         netSettings.hide();
+        _btnStart.gameObject.SetActive(true);
         Debug.Log("started host");
     }
 
