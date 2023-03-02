@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -21,10 +22,27 @@ public class Player : NetworkBehaviour
     private int hostColorIndex = 0;
 
     public NetworkVariable<Color> netPlayerColor = new NetworkVariable<Color> ();
-    
-    
+    public NetworkVariable<int> netScore = new NetworkVariable<int>(100);
+
     // Start is called before the first frame update
     void Start()
+    {
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (IsHost)
+        {
+            if (collision.gameObject.CompareTag("Bullet"))
+            {
+                HostHandleBulletCollision(gameObject);
+            }
+        }
+       // throw new NotImplementedException();
+    }
+
+    private void HostHandleBulletCollision(GameObject bullet)
     {
         
     }

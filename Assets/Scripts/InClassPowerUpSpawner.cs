@@ -15,7 +15,11 @@ public class InClassPowerUpSpawner : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         if(IsServer && bonusPrefab != null)
-        SpawnBonus();
+            SpawnBonus();
+        else
+        {
+            Debug.Log("I do not exist");
+        }
     }
 
 
@@ -24,6 +28,7 @@ public class InClassPowerUpSpawner : NetworkBehaviour
         Vector3 spawnPosition = transform.position;
         GameObject bonusSpawn = Instantiate(bonusPrefab, spawnPosition, Quaternion.identity);
         bonusSpawn.GetComponent<NetworkObject>().Spawn();
+        Debug.Log($"I spawned");
     }
     // Start is called before the first frame update
     void Start()
