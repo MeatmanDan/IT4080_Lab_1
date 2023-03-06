@@ -12,6 +12,8 @@ public class Player : NetworkBehaviour
     public float rotationSpeed = 50f;
 
     private Camera _camera;
+ 
+   public BulletSpawner newBullet; 
 
     private static Color[] availColors = new Color[]
     {
@@ -85,6 +87,7 @@ public class Player : NetworkBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             RequestNextColorServerRpc();
+            newBullet.FireServerRpc(Color.black);
             Debug.Log("Firing");
         }
     }

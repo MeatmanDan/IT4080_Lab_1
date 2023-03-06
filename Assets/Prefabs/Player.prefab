@@ -130,7 +130,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4696241058234005806}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8588694317812279107
 MeshFilter:
@@ -227,7 +227,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4696241058234005806}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2086277969315972138
 MeshFilter:
@@ -292,6 +292,51 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1912781219938263937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7066483653322524040}
+  - component: {fileID: 7918647190439597495}
+  m_Layer: 0
+  m_Name: BulletSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7066483653322524040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912781219938263937}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.28, z: 1.43}
+  m_LocalScale: {x: 1, y: 1, z: 13.984774}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4696241058234005806}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7918647190439597495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912781219938263937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a77f66905f55b4beea9531f2d12e7275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 2869187849406916183, guid: 2df558ceb6c9e41b39d4fc51e2fe34c8, type: 3}
 --- !u!1 &3166889393952835376
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +371,7 @@ Transform:
   - {fileID: 7831473882813390146}
   - {fileID: 5919772618424718068}
   m_Father: {fileID: 4696241058234005806}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6482124043161028144
 MeshFilter:
@@ -516,14 +561,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4952107416915797109}
-  m_LocalRotation: {x: 0.07374262, y: -0, z: -0, w: 0.9972773}
-  m_LocalPosition: {x: 0, y: 0.5699997, z: -3.08}
+  m_LocalRotation: {x: 0.15305838, y: -0, z: -0, w: 0.9882172}
+  m_LocalPosition: {x: 0, y: 1.9199982, z: -5.4699993}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4696241058234005806}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 8.458, y: 0, z: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 17.608, y: 0, z: 0}
 --- !u!20 &837456119781037229
 Camera:
   m_ObjectHideFlags: 0
@@ -603,10 +648,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7601898297808629752}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 389.89212, y: 90.634674, z: 23.555298}
+  m_LocalPosition: {x: 389.97, y: 90.634674, z: 23.555298}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7066483653322524040}
   - {fileID: 8100699151617101023}
   - {fileID: 4098505995345285848}
   - {fileID: 8181308975936996249}
@@ -671,6 +717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 50
   rotationSpeed: 50
+  newBullet: {fileID: 7918647190439597495}
   netPlayerColor:
     m_InternalValue: {r: 0, g: 0, b: 0, a: 0}
 --- !u!23 &1504924281823371230
@@ -844,7 +891,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4696241058234005806}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 91.24402, y: 0, z: 0}
 --- !u!33 &6449498693164678294
 MeshFilter:

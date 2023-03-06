@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using Unity.Netcode;
 //using UnityEditor.UIElements;
@@ -7,8 +8,8 @@ using Unity.Netcode;
 public class InClassPowerUpSpawner : NetworkBehaviour
 {
     public bool spawnOnLoad = true;
-    public float refreshTime = 2f;
-
+    public float refreshTime = 15f;
+    public float count; 
     public GameObject bonusPrefab;
 
     public override void OnNetworkSpawn()
@@ -24,6 +25,17 @@ public class InClassPowerUpSpawner : NetworkBehaviour
         Vector3 spawnPosition = transform.position;
         GameObject bonusSpawn = Instantiate(bonusPrefab, spawnPosition, Quaternion.identity);
         bonusSpawn.GetComponent<NetworkObject>().Spawn();
+        Destroy(bonusSpawn.gameObject, refreshTime); 
+    }
+
+    private void checkCount()
+    {
+        if (count > 350f)
+        {
+            SpawnBonus();
+            count = 0;
+        }
+
     }
     // Start is called before the first frame update
     void Start()
@@ -34,6 +46,7 @@ public class InClassPowerUpSpawner : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        count++; 
+        checkCount();
     }
 }
