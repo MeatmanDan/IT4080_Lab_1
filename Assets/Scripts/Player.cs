@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -86,9 +87,18 @@ public class Player : NetworkBehaviour
         requestmoveplayersServerRpc(moveBy,rotateBy);
         if (Input.GetButtonDown("Fire1"))
         {
-            RequestNextColorServerRpc();
+            //RequestNextColorServerRpc();
             newBullet.FireServerRpc(Color.black);
             Debug.Log("Firing");
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Power up")
+        {
+            RequestNextColorServerRpc();
+            Debug.Log("Collision");
         }
     }
 

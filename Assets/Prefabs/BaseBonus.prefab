@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 8377151886781283206}
   m_Layer: 0
   m_Name: BaseBonus
-  m_TagString: Untagged
+  m_TagString: 'Power  up '
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -205,5 +205,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.646222
-  m_Center: {x: 0.0076959133, y: 0, z: 0}
+  m_Radius: 1.2941005
+  m_Center: {x: 0.0076959133, y: 0, z: -0.08011496}
