@@ -13,7 +13,7 @@ public class BaseBonus : NetworkBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" && IsServer)
         {
            Destroy(this, 0); 
             Debug.Log("Collision ball 2 player");
