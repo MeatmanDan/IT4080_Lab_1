@@ -11,6 +11,14 @@ public class BaseBonus : NetworkBehaviour
     {
         Debug.Log("we started");
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+           Destroy(this, 0); 
+            Debug.Log("Collision ball 2 player");
+        }
+    }
 
     // Update is called once per frame
     void Update()
