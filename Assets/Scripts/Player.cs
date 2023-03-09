@@ -92,13 +92,15 @@ public class Player : NetworkBehaviour
             Debug.Log("Firing");
         }
     }
-
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Power up")
+        if (IsServer)
         {
-            RequestNextColorServerRpc();
-            Debug.Log("Collision");
+            if (collision.gameObject.tag == "Power up")
+            {
+                RequestNextColorServerRpc();
+                Debug.Log("Collision");
+            }
         }
     }
 

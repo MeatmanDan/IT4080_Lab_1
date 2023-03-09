@@ -9,13 +9,15 @@ public class BaseBonus : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("we started");
-    }
-    private void OnCollisionEnter(Collision collision)
+       // Debug.Log("we started");
+    } 
+    void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player" && IsServer)
+        Debug.Log("Collision ball 2 player");
+        if (IsServer)
         {
-           Destroy(this, 0); 
+            Debug.Log("Collision ball 2 player");
+            Destroy(gameObject); 
             Debug.Log("Collision ball 2 player");
         }
     }

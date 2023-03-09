@@ -25,11 +25,12 @@ public class InClassPowerUpSpawner : NetworkBehaviour
         Vector3 spawnPosition = transform.position;
         GameObject bonusSpawn = Instantiate(bonusPrefab, spawnPosition, Quaternion.identity);
         bonusSpawn.GetComponent<NetworkObject>().Spawn();
-        Destroy(bonusSpawn.gameObject, refreshTime); 
+       // Destroy(bonusSpawn.gameObject, refreshTime); 
     }
 
     private void checkCount()
     {
+        return;
         if (count > 350f)
         {
             SpawnBonus();

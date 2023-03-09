@@ -162,7 +162,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnOnLoad: 1
   refreshTime: 2
-  bonusPrefab: {fileID: 7090546475626211122, guid: 57fb15d875e9a48328c06c95d87c97f3, type: 3}
+  count: 0
+  bonusPrefab: {fileID: 8799380861039478338, guid: 57fb15d875e9a48328c06c95d87c97f3, type: 3}
 --- !u!1 &7462107897419722740
 GameObject:
   m_ObjectHideFlags: 0
