@@ -13,12 +13,15 @@ public class BaseBonus : NetworkBehaviour
     } 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision ball 2 player");
+        //Debug.Log("Collision ball 2 player");
         if (IsServer)
         {
-            Debug.Log("Collision ball 2 player");
-            Destroy(gameObject); 
-            Debug.Log("Collision ball 2 player");
+            if (collision.gameObject.tag == "Player")
+            {
+                // Debug.Log("Collision ball 2 player");
+                Destroy(gameObject);
+                Debug.Log("Collision ball 2 player");
+            }
         }
     }
 

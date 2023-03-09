@@ -23,6 +23,7 @@ public class InClassPowerUpSpawner : NetworkBehaviour
     private void SpawnBonus()
     {
         Vector3 spawnPosition = transform.position;
+        spawnPosition.y = 2;
         GameObject bonusSpawn = Instantiate(bonusPrefab, spawnPosition, Quaternion.identity);
         bonusSpawn.GetComponent<NetworkObject>().Spawn();
        // Destroy(bonusSpawn.gameObject, refreshTime); 

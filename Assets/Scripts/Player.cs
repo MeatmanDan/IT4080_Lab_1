@@ -96,10 +96,11 @@ public class Player : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (collision.gameObject.tag == "Power up")
+            if (collision.gameObject.tag == "pup")
             {
+                Debug.Log( "player Collision");
                 RequestNextColorServerRpc();
-                Debug.Log("Collision");
+;
             }
         }
     }
