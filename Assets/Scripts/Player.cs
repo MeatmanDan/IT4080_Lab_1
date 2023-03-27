@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
+    public int score = 0;
     public float movementSpeed = 50f;
 
     public float rotationSpeed = 50f;
@@ -94,14 +95,17 @@ public class Player : NetworkBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        if (IsServer)
-        {
+       // if (IsServer)
+      //  {
             if (collision.gameObject.tag == "bullet")
             {
-                Debug.Log( "player Collision");
+                Debug.Log( "player bullet Collision");
                 RequestNextColorServerRpc();
+                Destroy(collision.gameObject);
+                playerscoreupdateServerRpc();
+              //  clientId = NetworkManager.Singleton.LocalClientId;
 ;
-            }
+           // }
         }
     }
 
@@ -111,6 +115,13 @@ public class Player : NetworkBehaviour
         transform.Translate(posChange);
         transform.Translate(rotChange);
         
+    }
+
+    [ServerRpc]
+    void playerscoreupdateServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        score++;
+        Debug.Log($"Score = {score} for {serverRpcParams.Receive.SenderClientId}");
     }
 
     [ServerRpc]

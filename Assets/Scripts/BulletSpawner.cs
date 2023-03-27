@@ -22,16 +22,17 @@ public class BulletSpawner : NetworkBehaviour
     
     void OnCollisionEnter(Collision collision)
     {
-        if (IsServer)
-        {
+       // if (IsServer)
+       // {
            // if (collision.gameObject.tag == "bullet")
             //{
+            Destroy(collision.gameObject,0f);
                 Debug.Log( "Bullet Collision");
                // RequestNextColorServerRpc();
                 //;
                 
             //}
-        }
+       // }
     }
     // Start is called before the first frame update
     void Start()
