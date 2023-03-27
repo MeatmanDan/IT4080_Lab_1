@@ -6,6 +6,7 @@ TagManager:
   tags:
   - 'Power  up '
   - pup
+  - bullet
   layers:
   - Default
   - TransparentFX

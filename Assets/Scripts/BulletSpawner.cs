@@ -19,6 +19,20 @@ public class BulletSpawner : NetworkBehaviour
         newBullet.velocity = transform.forward * bulletSpeed;
         Destroy(newBullet.gameObject, timeToLive);
     }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if (IsServer)
+        {
+           // if (collision.gameObject.tag == "bullet")
+            //{
+                Debug.Log( "Bullet Collision");
+               // RequestNextColorServerRpc();
+                //;
+                
+            //}
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {

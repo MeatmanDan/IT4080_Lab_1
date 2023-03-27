@@ -96,7 +96,7 @@ public class Player : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (collision.gameObject.tag == "pup")
+            if (collision.gameObject.tag == "bullet")
             {
                 Debug.Log( "player Collision");
                 RequestNextColorServerRpc();

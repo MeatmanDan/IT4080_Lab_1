@@ -8,9 +8,11 @@ using Unity.Netcode;
 public class InClassPowerUpSpawner : NetworkBehaviour
 {
     public bool spawnOnLoad = true;
-    public float refreshTime = 15f;
+    public float timeUntilSpawn = 0;
+    public float spawnDelay = 15f;
     public float count; 
     public GameObject bonusPrefab;
+    public GameObject currPowerUp;
 
     public override void OnNetworkSpawn()
     {
@@ -20,7 +22,7 @@ public class InClassPowerUpSpawner : NetworkBehaviour
     }
 
 
-    private void SpawnBonus()
+   /* private void SpawnBonus()
     {
         Vector3 spawnPosition = transform.position;
         spawnPosition.y = 2;
@@ -28,6 +30,27 @@ public class InClassPowerUpSpawner : NetworkBehaviour
         bonusSpawn.GetComponent<NetworkObject>().Spawn();
        // Destroy(bonusSpawn.gameObject, refreshTime); 
     }
+    */
+   
+   private void SpawnBonus() {
+       Vector3 spawnPosition = transform.position;
+       spawnPosition.y = 3; 
+       GameObject pu = Instantiate(bonusPrefab, spawnPosition, Quaternion.identity);
+       pu.GetComponent<NetworkObject>().Spawn();
+       currPowerUp = pu;
+   }
+   private void ServerUpdate()
+   {
+       if (timeUntilSpawn > 0f) {
+           timeUntilSpawn -= Time.deltaTime;
+           if (timeUntilSpawn <= 0) {
+               SpawnBonus();
+           }
+       } else if(currPowerUp == null){
+           Debug.Log("Powerup is null");
+           timeUntilSpawn = spawnDelay;
+       }
+   }
 
     private void checkCount()
     {
@@ -39,6 +62,7 @@ public class InClassPowerUpSpawner : NetworkBehaviour
         }
 
     }
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +72,6 @@ public class InClassPowerUpSpawner : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        count++; 
-        checkCount();
+        ServerUpdate();
     }
 }
