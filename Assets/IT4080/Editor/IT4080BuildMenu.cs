@@ -90,7 +90,6 @@ public static class IT4080BuildMenu {
             } else if (mode == MODE_OSX) {
                 opts = BuildOptsOsx();
             }
-
             return opts;
         }
     }
@@ -153,7 +152,8 @@ public static class IT4080BuildMenu {
             opts.scenes = getBuildScenes();
         }
 
-        BuildReport report = BuildPipeline.BuildPlayer(opts);
+        BuildReport report = BuildPipeline.BuildPlayer(opts.scenes, path, opts.target, BuildOptions.Development);
+        //BuildReport report = BuildPipeline.BuildPlayer(opts);
 
         bool success = false;
         if (report.summary.result == BuildResult.Succeeded) {

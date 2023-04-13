@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
+using It4080;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
@@ -11,8 +12,8 @@ public class Main : NetworkBehaviour
 {
     public It4080.NetworkSettings netSettings;
     // Start is called before the first frame update
-    public It4080.Chat chat;
-    public ChatServer chatserver;
+    public It4080.ChatUi chat;
+   // public ChatServer chatserver;
     public Button _btnStart; 
     void Start()
     {
@@ -20,8 +21,8 @@ public class Main : NetworkBehaviour
         netSettings.startHost += NetSettingsOnHostStart;
         netSettings.startClient += NetSettingsOnClientStart;
         netSettings.setStatusText("Not Connected");
-       chat.SystemMessage("hello world");
-       chat.sendMessage += ChatOnSendMessage;
+      // ChatUi.SystemMessage("hello world");
+      //hatUi.sendMessage += ChatOnSendMessage;
      //  It4080.Chat.ChatMessage msg = new It4080.Chat.ChatMessage();
      //  msg.message = "foobar"; 
       //   chat.ShowMessage(msg);
@@ -42,10 +43,10 @@ public class Main : NetworkBehaviour
     {
         NetworkManager.SceneManager.LoadScene("Arena1", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
-    private void ChatOnSendMessage(It4080.Chat.ChatMessage msg)
-    {
-        chatserver.RequestSendChatMessageServerRpc(msg.message);
-    }
+   // private void ChatOnSendMessage(It4080.ChatUi.ChatMessage msg)
+   // {
+   //     chatserver.RequestSendChatMessageServerRpc(msg.message);
+   // }
 
     private void setupTransport(IPAddress ip, ushort port)
     {
@@ -127,19 +128,19 @@ public class Main : NetworkBehaviour
         {
             netSettings.setStatusText("Server Running");
         }
-        chat.SystemMessage("Server/Host Started");
+    //    chat.SystemMessage("Server/Host Started");
     }
     private void HostOnClientConnected(ulong clientId)
     {
         Debug.Log($"Client Connected: {clientId}");
-       chatserver.SendSystemMessageServerRpc($"Client {clientId} connected.");
-       chatserver.SendSystemMessageServerRpc(MakeWelcomeMessage(clientId), clientId);
+     //  chatserver.SendSystemMessageServerRpc($"Client {clientId} connected.");
+     //  chatserver.SendSystemMessageServerRpc(MakeWelcomeMessage(clientId), clientId);
     }
     private void HostOnClientDisconnected(ulong clientId)
     {
-        chatserver.SendSystemMessageServerRpc($"Client {clientId} disconnected");
+    //    chatserver.SendSystemMessageServerRpc($"Client {clientId} disconnected");
         Debug.Log($"Client Disconnected: {clientId}");
-       chatserver.SendChatMessageClientRpc($"Client {clientId} disconnected");
+      // chatserver.SendChatMessageClientRpc($"Client {clientId} disconnected");
     }
 
     private void ClientOnClientConnected(ulong clientId)
@@ -151,7 +152,7 @@ public class Main : NetworkBehaviour
 
     private void ClientOnClientDisconnect(ulong clientId)
     {
-        chat.SystemMessage("disconnected from server");
+      //  chat.SystemMessage("disconnected from server");
         netSettings.setStatusText("Connection Lost");
         netSettings.show();
         chat.enable(false);

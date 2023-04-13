@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
+    
     public int score = 0;
     public float movementSpeed = 50f;
 
@@ -25,8 +26,8 @@ public class Player : NetworkBehaviour
     private int hostColorIndex = 0;
 
     public NetworkVariable<Color> netPlayerColor = new NetworkVariable<Color> ();
-    
-    
+   // public NetworkVariable<int> netScore = new NetworkVariable<int>();
+
     // Start is called before the first frame update
     void Start()
     {
