@@ -169,8 +169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a612c1059d54cdc92471d31c601b7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chat: {fileID: 267177502}
-  txtChatLog: {fileID: 267177501}
 --- !u!4 &3852218
 Transform:
   m_ObjectHideFlags: 0
@@ -524,6 +522,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8570806882764981525, guid: c76a5081fcdbb4652a83a5e3d40a0832, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8572212089773222931, guid: c76a5081fcdbb4652a83a5e3d40a0832, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -539,17 +541,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2085656245142069979, guid: c76a5081fcdbb4652a83a5e3d40a0832, type: 3}
   m_PrefabInstance: {fileID: 267177499}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &267177501 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 714116872193125532, guid: c76a5081fcdbb4652a83a5e3d40a0832, type: 3}
-  m_PrefabInstance: {fileID: 267177499}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &267177502 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2489633284648578384, guid: c76a5081fcdbb4652a83a5e3d40a0832, type: 3}
@@ -1264,7 +1255,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &963194227
 Camera:
   m_ObjectHideFlags: 0
@@ -1484,7 +1475,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   netSettings: {fileID: 2049288664}
   chat: {fileID: 267177502}
-  chatserver: {fileID: 3852217}
   _btnStart: {fileID: 0}
 --- !u!114 &1374488303
 MonoBehaviour:

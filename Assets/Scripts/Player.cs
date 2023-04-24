@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-
+    private Camera _camera;
     public float forwardspeed = 25f, strafespeed = 7.5f, hoverspeed = 5;
     private float activeforwardspeed, activestrafespeed, activehoverspeed; 
     public int score = 0;
@@ -21,7 +21,7 @@ public class Player : NetworkBehaviour
     public float rollSpeed = 90f;
     public float rollAcceleration = 3.5f;
 
-    private Camera _camera;
+    
  
    public BulletSpawner newBullet; 
 
@@ -33,8 +33,8 @@ public class Player : NetworkBehaviour
     private int hostColorIndex = 0;
 
     public NetworkVariable<Color> netPlayerColor = new NetworkVariable<Color> ();
-   // public NetworkVariable<int> netScore = new NetworkVariable<int>();
-
+    public NetworkVariable<int> netScore = new NetworkVariable<int>();
+    public NetworkVariable<int> netHealth = new NetworkVariable<int>(); 
     // Start is called before the first frame update
     void Start()
     {
@@ -43,11 +43,11 @@ public class Player : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        _camera = transform.Find("Camera").GetComponent<Camera>();
+        _camera.enabled = IsOwner;
         screenCenter.x = Screen.width * .5f;
         screenCenter.y = Screen.height * .5f;
         Cursor.lockState = CursorLockMode.Confined;
-        _camera = transform.Find("Camera").GetComponent<Camera>();
-        _camera.enabled = IsOwner;
         netPlayerColor.OnValueChanged += OnPlayerColorChanged;
     }
 
@@ -133,6 +133,21 @@ public class Player : NetworkBehaviour
                 
               //  clientId = NetworkManager.Singleton.LocalClientId;
 ;
+            }
+
+            if (collision.gameObject.tag == "pup")
+            {
+                Debug.Log("power up pickup");
+                for(int i =0; i <250; i++)
+                {
+                    forwardspeed = 35f;
+                    strafespeed = 15f;
+                    hoverspeed = 10f;
+                }
+                Debug.Log("power up over");
+                forwardspeed = 25f;
+                strafespeed = 7.5f;
+                hoverspeed = 5;
             }
         }
     }

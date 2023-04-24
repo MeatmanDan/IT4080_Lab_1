@@ -52,6 +52,7 @@ public class InClassPowerUpSpawner : NetworkBehaviour
        }
    }
 
+
     private void checkCount()
     {
         return;
