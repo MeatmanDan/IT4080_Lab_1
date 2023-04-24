@@ -16,7 +16,7 @@ public class InClassPowerUpSpawner : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
+        //OnNetworkSpawn();
         if(IsServer && bonusPrefab != null)
         SpawnBonus();
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,11 +9,17 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-    
+
+    public float forwardspeed = 25f, strafespeed = 7.5f, hoverspeed = 5;
+    private float activeforwardspeed, activestrafespeed, activehoverspeed; 
     public int score = 0;
     public float movementSpeed = 50f;
-
+    public float lookrotatespeed = 90f;
+    private Vector2 lookInput, screenCenter, mouseDis; 
     public float rotationSpeed = 50f;
+    private float rollInput;
+    public float rollSpeed = 90f;
+    public float rollAcceleration = 3.5f;
 
     private Camera _camera;
  
@@ -36,6 +43,9 @@ public class Player : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        screenCenter.x = Screen.width * .5f;
+        screenCenter.y = Screen.height * .5f;
+        Cursor.lockState = CursorLockMode.Confined;
         _camera = transform.Find("Camera").GetComponent<Camera>();
         _camera.enabled = IsOwner;
         netPlayerColor.OnValueChanged += OnPlayerColorChanged;
@@ -55,21 +65,28 @@ public class Player : NetworkBehaviour
 
     private Vector3 CalcMovementFromInput(float delta)
     {
-        bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
-        float x_move = 0.0f;
-        float Z_move = Input.GetAxis("Vertical");
+       // bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+        //float x_move = 0.0f;
+       // float Z_move = Input.GetAxis("Vertical");
        // if(isShiftKeyDown)
       //  {
-            x_move = Input.GetAxis("Horizontal");
+         //   x_move = Input.GetAxis("Horizontal");
       //  }
-        Vector3 moveVect = new Vector3(x_move, 0, Z_move);
-        moveVect *= movementSpeed * delta;
+        //Vector3 moveVect = new Vector3(x_move, 0, Z_move);
+        //moveVect *= movementSpeed * delta;
+        //return moveVect;
+      //  Vector3 moveVect = new Vector3(0, 0, 0); 
+        activeforwardspeed = Input.GetAxisRaw("Vertical") * forwardspeed;
+        activestrafespeed = Input.GetAxisRaw("Horizontal") * strafespeed;
+        activehoverspeed = Input.GetAxisRaw("Hover") * hoverspeed;
+        Vector3 moveVect = new Vector3((activestrafespeed * Time.deltaTime),
+                                         (activehoverspeed * Time.deltaTime), (activeforwardspeed * Time.deltaTime));
         return moveVect;
     }
 
     private Vector3 CalcRotationFromInput(float delta)
     {
-        bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+      //  bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
         float y_rot = 0.0f;
       //  float y_move = Input.GetAxis("Horizontal"); 
        // if (isShiftKeyDown)
@@ -77,8 +94,17 @@ public class Player : NetworkBehaviour
           //  y_rot = Input.GetAxis("Horizontal");
        // }
 
-        Vector3 rotVect = new Vector3(0, y_rot, 0);
-        rotVect *= rotationSpeed * delta;
+
+       lookInput.x = Input.mousePosition.x;
+       lookInput.y = Input.mousePosition.y;
+       mouseDis.x = (lookInput.x - screenCenter.x) / screenCenter.y;
+       mouseDis.y = (lookInput.y - screenCenter.y) / screenCenter.x;
+       mouseDis = Vector2.ClampMagnitude(mouseDis, 1);
+       rollInput = Mathf.Lerp(rollInput, Input.GetAxisRaw("Roll"), rollAcceleration * Time.deltaTime);
+
+        Vector3 rotVect = new Vector3((-mouseDis.y * lookrotatespeed * Time.deltaTime), (mouseDis.x * lookrotatespeed * Time.deltaTime), 
+           (rollInput *rollSpeed *Time.deltaTime) );
+       // rotVect *= rotationSpeed * delta;
         return rotVect; 
     }
 
@@ -96,17 +122,18 @@ public class Player : NetworkBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-       // if (IsServer)
-      //  {
+        if (IsServer)
+        {
             if (collision.gameObject.tag == "bullet")
             {
                 Debug.Log( "player bullet Collision");
-                RequestNextColorServerRpc();
-                Destroy(collision.gameObject);
                 playerscoreupdateServerRpc();
+              //  RequestNextColorServerRpc();
+                Destroy(collision.gameObject);
+                
               //  clientId = NetworkManager.Singleton.LocalClientId;
 ;
-           // }
+            }
         }
     }
 
@@ -114,8 +141,8 @@ public class Player : NetworkBehaviour
     public void requestmoveplayersServerRpc(Vector3 posChange, Vector3 rotChange, ServerRpcParams serverRpcParams = default)
     {
         transform.Translate(posChange);
-        transform.Translate(rotChange);
-        
+        transform.Rotate(rotChange, Space.Self);
+
     }
 
     [ServerRpc]
