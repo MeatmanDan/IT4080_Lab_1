@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Player : NetworkBehaviour
@@ -20,10 +21,12 @@ public class Player : NetworkBehaviour
     private float rollInput;
     public float rollSpeed = 90f;
     public float rollAcceleration = 3.5f;
-
+    public int playerHealth = 5;
+    public Image healthBar; 
     
  
-   public BulletSpawner newBullet; 
+
+    public BulletSpawner newBullet; 
 
     private static Color[] availColors = new Color[]
     {
@@ -127,10 +130,11 @@ public class Player : NetworkBehaviour
             if (collision.gameObject.tag == "bullet")
             {
                 Debug.Log( "player bullet Collision");
-                playerscoreupdateServerRpc();
+                //playerscoreupdateServerRpc();
               //  RequestNextColorServerRpc();
+              takeplayerdamageServerRpc();
                 Destroy(collision.gameObject);
-                
+               
               //  clientId = NetworkManager.Singleton.LocalClientId;
 ;
             }
@@ -153,11 +157,28 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void requestmoveplayersServerRpc(Vector3 posChange, Vector3 rotChange, ServerRpcParams serverRpcParams = default)
+    void requestmoveplayersServerRpc(Vector3 posChange, Vector3 rotChange, ServerRpcParams serverRpcParams = default)
     {
         transform.Translate(posChange);
         transform.Rotate(rotChange, Space.Self);
 
+    }
+
+    [ServerRpc]
+    void takeplayerdamageServerRpc (ServerRpcParams serverRpcParams = default)
+    {
+        playerHealth = playerHealth - 1;
+        healthBar.fillAmount = playerHealth / 100f;
+        Debug.Log($"Player has {playerHealth}");
+         
+     
+
+
+
+            if (playerHealth == 0)
+        {
+            Debug.Log($"Player has died");
+        }
     }
 
     [ServerRpc]
