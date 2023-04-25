@@ -12,21 +12,28 @@ public class Player : NetworkBehaviour
 {
     private Camera _camera;
     public float forwardspeed = 25f, strafespeed = 7.5f, hoverspeed = 5;
-    private float activeforwardspeed, activestrafespeed, activehoverspeed; 
+    private float activeforwardspeed, activestrafespeed, activehoverspeed;
     public int score = 0;
     public float movementSpeed = 50f;
     public float lookrotatespeed = 90f;
-    private Vector2 lookInput, screenCenter, mouseDis; 
+    private Vector2 lookInput, screenCenter, mouseDis;
     public float rotationSpeed = 50f;
     private float rollInput;
     public float rollSpeed = 90f;
-    public float rollAcceleration = 3.5f;
-    public int playerHealth = 5;
-    public Image healthBar; 
-    
- 
 
-    public BulletSpawner newBullet; 
+    public float rollAcceleration = 3.5f;
+
+    //  public float playerHealth = 5f;
+    public Image healthBar;
+    public Image healthBar2;
+    public Image healthBar3;
+    public Image shieldBar;
+    public bool hasShield = true;
+    public TMPro.TMP_Text scoreText;
+    public bool isDead = false;
+
+
+    public BulletSpawner newBullet;
 
     private static Color[] availColors = new Color[]
     {
@@ -35,13 +42,15 @@ public class Player : NetworkBehaviour
 
     private int hostColorIndex = 0;
 
-    public NetworkVariable<Color> netPlayerColor = new NetworkVariable<Color> ();
+    public NetworkVariable<Color> netPlayerColor = new NetworkVariable<Color>();
     public NetworkVariable<int> netScore = new NetworkVariable<int>();
-    public NetworkVariable<int> netHealth = new NetworkVariable<int>(); 
+
+    public NetworkVariable<int> netHealth = new NetworkVariable<int>();
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     public override void OnNetworkSpawn()
@@ -52,6 +61,9 @@ public class Player : NetworkBehaviour
         screenCenter.y = Screen.height * .5f;
         Cursor.lockState = CursorLockMode.Confined;
         netPlayerColor.OnValueChanged += OnPlayerColorChanged;
+        netHealth.Value = 3;
+        netHealth.OnValueChanged += OnHealthChanged;
+        netScore.OnValueChanged += OnScoreChanged;
     }
 
     public void ApplyPlayerColor()
@@ -60,98 +72,158 @@ public class Player : NetworkBehaviour
         Debug.Log("Applying Player Color");
     }
 
+    public void OnHealthChanged(int previous, int current)
+    {
+        string who = "";
+        if (IsOwner)
+        {
+            who = "ME ";
+        }
+        else
+        {
+            who = $"{GetComponent<NetworkObject>().OwnerClientId}  ";
+        }
+
+        Debug.Log($"[{NetworkManager.LocalClientId}]{who}Health {previous} -> {current}");
+
+    }
+
+    public void OnScoreChanged(int previous, int current)
+    {
+        if (IsOwner)
+        {
+
+            scoreText.SetText("");
+            scoreText.SetText($"{netScore.Value.ToString()}");
+
+            string who = "";
+            if (IsOwner)
+            {
+                who = "ME ";
+            }
+            else
+            {
+                who = $"{GetComponent<NetworkObject>().OwnerClientId}  ";
+            }
+
+            Debug.Log($"[{NetworkManager.LocalClientId}]{who}Score {previous} -> {current}");
+        }
+
+    }
+
     public void OnPlayerColorChanged(Color previous, Color current)
     {
         ApplyPlayerColor();
     }
-    
+
 
     private Vector3 CalcMovementFromInput(float delta)
     {
-       // bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+
+        // bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
         //float x_move = 0.0f;
-       // float Z_move = Input.GetAxis("Vertical");
-       // if(isShiftKeyDown)
-      //  {
-         //   x_move = Input.GetAxis("Horizontal");
-      //  }
+        // float Z_move = Input.GetAxis("Vertical");
+        // if(isShiftKeyDown)
+        //  {
+        //   x_move = Input.GetAxis("Horizontal");
+        //  }
         //Vector3 moveVect = new Vector3(x_move, 0, Z_move);
         //moveVect *= movementSpeed * delta;
         //return moveVect;
-      //  Vector3 moveVect = new Vector3(0, 0, 0); 
+        //  Vector3 moveVect = new Vector3(0, 0, 0); 
         activeforwardspeed = Input.GetAxisRaw("Vertical") * forwardspeed;
         activestrafespeed = Input.GetAxisRaw("Horizontal") * strafespeed;
         activehoverspeed = Input.GetAxisRaw("Hover") * hoverspeed;
         Vector3 moveVect = new Vector3((activestrafespeed * Time.deltaTime),
-                                         (activehoverspeed * Time.deltaTime), (activeforwardspeed * Time.deltaTime));
+            (activehoverspeed * Time.deltaTime), (activeforwardspeed * Time.deltaTime));
         return moveVect;
+
     }
 
     private Vector3 CalcRotationFromInput(float delta)
     {
-      //  bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+
+        //  bool isShiftKeyDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
         float y_rot = 0.0f;
-      //  float y_move = Input.GetAxis("Horizontal"); 
-       // if (isShiftKeyDown)
-      // {
-          //  y_rot = Input.GetAxis("Horizontal");
-       // }
+        //  float y_move = Input.GetAxis("Horizontal"); 
+        // if (isShiftKeyDown)
+        // {
+        //  y_rot = Input.GetAxis("Horizontal");
+        // }
 
 
-       lookInput.x = Input.mousePosition.x;
-       lookInput.y = Input.mousePosition.y;
-       mouseDis.x = (lookInput.x - screenCenter.x) / screenCenter.y;
-       mouseDis.y = (lookInput.y - screenCenter.y) / screenCenter.x;
-       mouseDis = Vector2.ClampMagnitude(mouseDis, 1);
-       rollInput = Mathf.Lerp(rollInput, Input.GetAxisRaw("Roll"), rollAcceleration * Time.deltaTime);
+        lookInput.x = Input.mousePosition.x;
+        lookInput.y = Input.mousePosition.y;
+        mouseDis.x = (lookInput.x - screenCenter.x) / screenCenter.y;
+        mouseDis.y = (lookInput.y - screenCenter.y) / screenCenter.x;
+        mouseDis = Vector2.ClampMagnitude(mouseDis, 1);
+        rollInput = Mathf.Lerp(rollInput, Input.GetAxisRaw("Roll"), rollAcceleration * Time.deltaTime);
 
-        Vector3 rotVect = new Vector3((-mouseDis.y * lookrotatespeed * Time.deltaTime), (mouseDis.x * lookrotatespeed * Time.deltaTime), 
-           (rollInput *rollSpeed *Time.deltaTime) );
-       // rotVect *= rotationSpeed * delta;
-        return rotVect; 
+        Vector3 rotVect = new Vector3((-mouseDis.y * lookrotatespeed * Time.deltaTime),
+            (mouseDis.x * lookrotatespeed * Time.deltaTime),
+            (rollInput * rollSpeed * Time.deltaTime));
+        // rotVect *= rotationSpeed * delta;
+        return rotVect;
+
     }
 
     private void OwnerUpdate()
     {
-        Vector3 moveBy = CalcMovementFromInput(Time.deltaTime);
-        Vector3 rotateBy = CalcRotationFromInput(Time.deltaTime);
-        requestmoveplayersServerRpc(moveBy,rotateBy);
-        if (Input.GetButtonDown("Fire1"))
+        if (!isDead)
         {
-            //RequestNextColorServerRpc();
-            newBullet.FireServerRpc(Color.black);
-            Debug.Log("Firing");
+            Vector3 moveBy = CalcMovementFromInput(Time.deltaTime);
+            Vector3 rotateBy = CalcRotationFromInput(Time.deltaTime);
+            requestmoveplayersServerRpc(moveBy, rotateBy);
+            if (Input.GetButtonDown("Fire1"))
+            {
+                //RequestNextColorServerRpc();
+                newBullet.FireServerRpc(Color.black);
+                //  Debug.Log("Firing");
+            }
         }
     }
+
     void OnCollisionEnter(Collision collision)
     {
         if (IsServer)
         {
-            if (collision.gameObject.tag == "bullet")
             {
-                Debug.Log( "player bullet Collision");
-                //playerscoreupdateServerRpc();
-              //  RequestNextColorServerRpc();
-              takeplayerdamageServerRpc();
-                Destroy(collision.gameObject);
-               
-              //  clientId = NetworkManager.Singleton.LocalClientId;
-;
-            }
 
-            if (collision.gameObject.tag == "pup")
-            {
-                Debug.Log("power up pickup");
-                for(int i =0; i <250; i++)
+                if (collision.gameObject.tag == "bullet")
+
                 {
-                    forwardspeed = 35f;
-                    strafespeed = 15f;
-                    hoverspeed = 10f;
+                    Debug.Log("player bullet Collision");
+                    //playerscoreupdateServerRpc();
+                    //  RequestNextColorServerRpc();
+                    // takeplayerdamageServerRpc();
+                    // Destroy(collision.gameObject);
+                    ServerHandleBulletCollision(collision.gameObject);
+                    //  clientId = NetworkManager.Singleton.LocalClientId;
+
+
                 }
-                Debug.Log("power up over");
-                forwardspeed = 25f;
-                strafespeed = 7.5f;
-                hoverspeed = 5;
+
+
+                if (collision.gameObject.tag == "pup")
+
+                {
+                    if (!hasShield)
+                    {
+                        hasShield = true;
+                        shieldBar.fillAmount = 1;
+                        Debug.Log("shield refill");
+                    }
+                    else
+                    {
+                        Debug.Log("power up pickup");
+
+
+                        forwardspeed = 35f;
+                        strafespeed = 15f;
+                        hoverspeed = 10f;
+
+                    }
+                }
             }
         }
     }
@@ -165,27 +237,81 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc]
-    void takeplayerdamageServerRpc (ServerRpcParams serverRpcParams = default)
+    void takeplayerdamageServerRpc(ServerRpcParams serverRpcParams = default)
     {
-        playerHealth = playerHealth - 1;
-        healthBar.fillAmount = playerHealth / 100f;
-        Debug.Log($"Player has {playerHealth}");
-         
-     
+        netHealth.Value = netHealth.Value - 1;
+        healthBar.fillAmount = netHealth.Value / 100f;
+        Debug.Log($"Player {serverRpcParams.Receive.SenderClientId} has {netHealth.Value}");
 
 
 
-            if (playerHealth == 0)
+
+
+        if (netHealth.Value == 0)
         {
-            Debug.Log($"Player has died");
+            Debug.Log($"Player {serverRpcParams.Receive.SenderClientId} has died");
         }
     }
+
+    private void ServerHandleBulletCollision(GameObject bullet)
+    {
+        Bullet BulletSpawner = bullet.GetComponent<Bullet>();
+        // netHealth.Value -= 1;
+        // Cannot call RPC because we might not be the owner and the RPC
+        // requires ownership.  We are on the host, so we can just do the
+        // color change instead of requesting it.
+        // ServerNextColor();
+
+        ulong owner = bullet.GetComponent<NetworkObject>().OwnerClientId;
+
+        Player otherPlayer =
+            NetworkManager.Singleton.ConnectedClients[owner].PlayerObject.GetComponent<Player>();
+        otherPlayer.netScore.Value += 1;
+        ServerHandleMinusHealth();
+        Debug.Log($"point for {owner}");
+        Debug.Log($"server:  [{owner}] shot [{GetComponent<NetworkObject>().OwnerClientId}]");
+
+        Destroy(bullet);
+    }
+
+    private void ServerHandleMinusHealth()
+    {
+        
+            if (!hasShield)
+            {
+                netHealth.Value -= 1;
+                if (netHealth.Value == 2f)
+                {
+                    healthBar3.fillAmount = netHealth.Value / 100f;
+                }
+
+                if (netHealth.Value == 1f)
+                {
+                    healthBar2.fillAmount = netHealth.Value / 100f;
+                }
+
+                if (netHealth.Value == 0f)
+                {
+                    healthBar.fillAmount = netHealth.Value / 100f;
+                    isDead = true;
+                    Debug.Log("dead");
+                }
+            }
+            else
+            {
+                hasShield = false;
+                shieldBar.fillAmount = 0;
+            }
+
+            Debug.Log($"[{NetworkManager.Singleton.LocalClientId}] health = {netHealth.Value}");
+    }
+
 
     [ServerRpc]
     void playerscoreupdateServerRpc(ServerRpcParams serverRpcParams = default)
     {
-        score++;
-        Debug.Log($"Score = {score} for {serverRpcParams.Receive.SenderClientId}");
+        netScore.Value = netScore.Value + 1;
+        Debug.Log($"Score = {netScore.Value} for {serverRpcParams.Receive.SenderClientId}");
     }
 
     [ServerRpc]
@@ -197,20 +323,21 @@ public class Player : NetworkBehaviour
         {
             hostColorIndex = 0;
         }
+
         Debug.Log($"Host colors index = {hostColorIndex} for {serverRpcParams.Receive.SenderClientId}");
         netPlayerColor.Value = availColors[hostColorIndex];
     }
-    
+
 
     // Update is called once per frame
     void Update()
     {
-        
+
         if (IsOwner)
         {
             OwnerUpdate();
         }
-        
-        
+
+
     }
 }
