@@ -46,7 +46,7 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> netScore = new NetworkVariable<int>();
 
     public NetworkVariable<int> netHealth = new NetworkVariable<int>();
-
+    public NetworkVariable<Boolean> netShied = new NetworkVariable<Boolean>();
     // Start is called before the first frame update
     void Start()
     {
@@ -85,6 +85,23 @@ public class Player : NetworkBehaviour
         }
 
         Debug.Log($"[{NetworkManager.LocalClientId}]{who}Health {previous} -> {current}");
+       
+        if (netHealth.Value == 2f)
+        {
+            healthBar3.fillAmount = netHealth.Value / 100f;
+        }
+
+        if (netHealth.Value == 1f)
+        {
+            healthBar2.fillAmount = netHealth.Value / 100f;
+        }
+
+        if (netHealth.Value == 0f)
+        {
+            healthBar.fillAmount = netHealth.Value / 100f;
+            isDead = true;
+            Debug.Log("dead");
+        }
 
     }
 
@@ -207,9 +224,9 @@ public class Player : NetworkBehaviour
                 if (collision.gameObject.tag == "pup")
 
                 {
-                    if (!hasShield)
+                    if (!netShied.Value)
                     {
-                        hasShield = true;
+                        netShied.Value = true;
                         shieldBar.fillAmount = 1;
                         Debug.Log("shield refill");
                     }
@@ -253,6 +270,10 @@ public class Player : NetworkBehaviour
         }
     }
 
+    public void handleShield()
+    {
+        shieldBar.fillAmount = 0; 
+    }
     private void ServerHandleBulletCollision(GameObject bullet)
     {
         Bullet BulletSpawner = bullet.GetComponent<Bullet>();
@@ -277,30 +298,16 @@ public class Player : NetworkBehaviour
     private void ServerHandleMinusHealth()
     {
         
-            if (!hasShield)
+            if (!netShied.Value)
             {
                 netHealth.Value -= 1;
-                if (netHealth.Value == 2f)
-                {
-                    healthBar3.fillAmount = netHealth.Value / 100f;
-                }
-
-                if (netHealth.Value == 1f)
-                {
-                    healthBar2.fillAmount = netHealth.Value / 100f;
-                }
-
-                if (netHealth.Value == 0f)
-                {
-                    healthBar.fillAmount = netHealth.Value / 100f;
-                    isDead = true;
-                    Debug.Log("dead");
-                }
+                
             }
             else
             {
-                hasShield = false;
-                shieldBar.fillAmount = 0;
+                netShied.Value = false;
+                handleShield();
+                // 
             }
 
             Debug.Log($"[{NetworkManager.Singleton.LocalClientId}] health = {netHealth.Value}");
