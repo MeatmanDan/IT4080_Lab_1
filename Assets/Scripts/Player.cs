@@ -94,22 +94,7 @@ public class Player : NetworkBehaviour
         Debug.Log($"[{NetworkManager.LocalClientId}]{who}Health {previous} -> {current}");
         if (IsOwner)
         {
-            if (netHealth.Value == 2f)
-            {
-                healthBar3.fillAmount = netHealth.Value / 100f;
-            }
-
-            if (netHealth.Value == 1f)
-            {
-                healthBar2.fillAmount = netHealth.Value / 100f;
-            }
-
-            if (netHealth.Value == 0f)
-            {
-                healthBar.fillAmount = netHealth.Value / 100f;
-                isDead = true;
-                Debug.Log("dead");
-            }
+         UpdateDisplay(); 
         }
 
     }
@@ -134,9 +119,7 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
 
-            scoreText.SetText("");
-            scoreText.SetText($"{netScore.Value.ToString()}");
-
+           UpdateDisplay();
             string who = "";
             if (IsOwner)
             {
@@ -279,6 +262,25 @@ public class Player : NetworkBehaviour
 
     public void UpdateDisplay()
     {
+        scoreText.SetText("");
+        scoreText.SetText($"{netScore.Value.ToString()}");
+
+        if (netHealth.Value == 2f)
+        {
+            healthBar3.fillAmount = netHealth.Value / 100f;
+        }
+
+        if (netHealth.Value == 1f)
+        {
+            healthBar2.fillAmount = netHealth.Value / 100f;
+        }
+
+        if (netHealth.Value == 0f)
+        {
+            healthBar.fillAmount = netHealth.Value / 100f;
+            isDead = true;
+            Debug.Log("dead");
+        }
         
     }
 
