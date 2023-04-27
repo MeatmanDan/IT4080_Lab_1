@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -62,8 +63,14 @@ public class Player : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         netPlayerColor.OnValueChanged += OnPlayerColorChanged;
         netHealth.Value = 3;
-        netHealth.OnValueChanged += OnHealthChanged;
-        netScore.OnValueChanged += OnScoreChanged;
+        if (IsClient)
+        {
+            netHealth.OnValueChanged += OnHealthChanged;
+            netScore.OnValueChanged += OnScoreChanged;
+        }
+
+        //netShied.OnValueChanged += OnShiedChanged;
+        netShied.Value = true; 
     }
 
     public void ApplyPlayerColor()
@@ -85,26 +92,43 @@ public class Player : NetworkBehaviour
         }
 
         Debug.Log($"[{NetworkManager.LocalClientId}]{who}Health {previous} -> {current}");
-       
-        if (netHealth.Value == 2f)
+        if (IsOwner)
         {
-            healthBar3.fillAmount = netHealth.Value / 100f;
-        }
+            if (netHealth.Value == 2f)
+            {
+                healthBar3.fillAmount = netHealth.Value / 100f;
+            }
 
-        if (netHealth.Value == 1f)
-        {
-            healthBar2.fillAmount = netHealth.Value / 100f;
-        }
+            if (netHealth.Value == 1f)
+            {
+                healthBar2.fillAmount = netHealth.Value / 100f;
+            }
 
-        if (netHealth.Value == 0f)
-        {
-            healthBar.fillAmount = netHealth.Value / 100f;
-            isDead = true;
-            Debug.Log("dead");
+            if (netHealth.Value == 0f)
+            {
+                healthBar.fillAmount = netHealth.Value / 100f;
+                isDead = true;
+                Debug.Log("dead");
+            }
         }
 
     }
 
+   /* public void OnShiedChanged(bool prev, bool curr)
+    {
+        if (IsOwner)
+        {
+            if (netShied.Value)
+            {
+                shieldBar.fillAmount = 1f;
+            }
+            else
+            {
+                shieldBar.fillAmount = 0f;
+            }
+        }
+    }
+*/
     public void OnScoreChanged(int previous, int current)
     {
         if (IsOwner)
@@ -253,6 +277,11 @@ public class Player : NetworkBehaviour
 
     }
 
+    public void UpdateDisplay()
+    {
+        
+    }
+
     [ServerRpc]
     void takeplayerdamageServerRpc(ServerRpcParams serverRpcParams = default)
     {
@@ -272,7 +301,10 @@ public class Player : NetworkBehaviour
 
     public void handleShield()
     {
-        shieldBar.fillAmount = 0; 
+        if (IsOwner)
+        {
+            shieldBar.fillAmount = 0;
+        }
     }
     private void ServerHandleBulletCollision(GameObject bullet)
     {
@@ -307,7 +339,7 @@ public class Player : NetworkBehaviour
             {
                 netShied.Value = false;
                 handleShield();
-                // 
+                
             }
 
             Debug.Log($"[{NetworkManager.Singleton.LocalClientId}] health = {netHealth.Value}");
